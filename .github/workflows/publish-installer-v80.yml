@@ -1,0 +1,20 @@
+name: Publish installer v80 preview
+on:
+  push:
+    branches: [main]
+    paths: [release-staging/Mc5mr-Equicord-Installer-v80.exe]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Verify and publish preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd release-staging
+          sha256sum -c Mc5mr-Equicord-Installer-v80.exe.sha256
+          gh release create equicord-v25-80-preview Mc5mr-Equicord-Installer-v80.exe Mc5mr-Equicord-Installer-v80.exe.sha256 --prerelease --title 'Mc5mr Equicord Installer v80 Preview' --notes 'Installer redetects the current Discord version before repair. The Discord startup hang is not yet resolved.'
