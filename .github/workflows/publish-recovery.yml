@@ -1,0 +1,28 @@
+name: Publish recovered installer
+on:
+  push:
+    branches: [main]
+    paths: [release-staging/latest.json]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Verify assets and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 release-staging/verify.py
+          gh release create equicord-v25-79 release-staging/desktop.asar release-staging/desktop.sha256 release-staging/Mc5mr-Equicord-Installer.exe release-staging/Mc5mr-Equicord-Installer.exe.sha256 --title 'Mc5mr Equicord v25-79' --notes 'Restores updates from EquicordPrivatee.' --latest
+      - name: Activate updater feed
+        run: |
+          set -euo pipefail
+          cp release-staging/latest.json latest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest.json
+          git commit -m 'Activate v25-79 updater feed'
+          git push
