@@ -1,0 +1,360 @@
+.vc-cal-modal-root {
+    max-width: 900px;
+    color: var(--text-default);
+}
+
+/* أُزيلت قاعدةٌ شاملة كانت تفرض اللون على كلّ نسل النافذة وتطمس
+   ألوان الأزرار والروابط معه. الجذر وحده يكفي، والوراثة تتكفّل بالباقي. */
+
+.vc-cal-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+.vc-cal-modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-strong) !important;
+}
+
+.vc-cal-modal-content {
+    padding: 0 16px 16px;
+}
+
+.vc-cal-layout {
+    display: flex;
+    gap: 16px;
+    min-height: 400px;
+}
+
+.vc-cal-calendar-side {
+    flex: 1;
+    min-width: 320px;
+}
+
+.vc-cal-calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.vc-cal-nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-default) !important;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vc-cal-nav-btn:hover {
+    color: var(--text-strong) !important;
+    background: var(--esharq-tint-strong);
+}
+
+.vc-cal-month-label {
+    background: none;
+    border: none;
+    color: var(--text-strong) !important;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 4px;
+}
+
+.vc-cal-month-label:hover {
+    background: var(--esharq-tint-strong);
+}
+
+.vc-cal-weekday-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 4px;
+}
+
+.vc-cal-weekday {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-link) !important;
+    text-transform: uppercase;
+    padding: 4px 0;
+}
+
+.vc-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.vc-cal-day-cell {
+    position: relative;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-default) !important;
+    transition: background 0.1s, color 0.1s;
+    min-height: 36px;
+}
+
+.vc-cal-day-cell:not(.vc-cal-empty):hover {
+    background: var(--esharq-tint-strong);
+    color: var(--text-strong) !important;
+}
+
+.vc-cal-day-cell.vc-cal-today {
+    background: rgb(88 101 242 / 30%);
+    color: var(--text-link) !important;
+    font-weight: 600;
+}
+
+.vc-cal-day-cell.vc-cal-selected {
+    background: #5865f2;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+.vc-cal-day-cell.vc-cal-selected.vc-cal-today {
+    color: #fff !important;
+}
+
+.vc-cal-day-cell.vc-cal-empty {
+    cursor: default;
+}
+
+.vc-cal-note-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--text-link);
+    position: absolute;
+    bottom: 3px;
+}
+
+.vc-cal-day-cell.vc-cal-selected .vc-cal-note-dot {
+    background: #fff;
+}
+
+.vc-cal-notes-side {
+    flex: 0 0 280px;
+    border-left: 1px solid var(--esharq-tint-strong);
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.vc-cal-notes-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-link) !important;
+    font-size: 13px;
+    font-style: italic;
+}
+
+.vc-cal-notes-header {
+    margin-bottom: 12px;
+}
+
+.vc-cal-notes-date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.vc-cal-notes-day-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-strong) !important;
+}
+
+.vc-cal-notes-date-full {
+    font-size: 12px;
+    color: var(--text-subtle) !important;
+}
+
+.vc-cal-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.vc-cal-add-input {
+    background: var(--background-base-lowest);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    color: var(--text-default) !important;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.vc-cal-add-input::placeholder {
+    color: var(--text-muted) !important;
+}
+
+.vc-cal-add-input:focus {
+    border-color: #5865f2;
+}
+
+.vc-cal-add-row {
+    display: flex;
+    gap: 6px;
+}
+
+.vc-cal-format-select {
+    flex: 1;
+    background: var(--background-base-lowest);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    color: var(--text-default) !important;
+    font-size: 12px;
+    padding: 6px 8px;
+    outline: none;
+    cursor: pointer;
+}
+
+.vc-cal-format-select:focus {
+    border-color: #5865f2;
+}
+
+.vc-cal-add-btn {
+    background: #5865f2;
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.vc-cal-add-btn:hover {
+    background: #4752c4;
+}
+
+.vc-cal-add-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.vc-cal-preview {
+    font-size: 11px;
+    color: var(--text-subtle) !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.vc-cal-preview code {
+    background: var(--background-base-low);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--text-link) !important;
+}
+
+.vc-cal-preview-example {
+    color: var(--text-muted) !important;
+}
+
+.vc-cal-notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: 300px;
+}
+
+.vc-cal-note-card {
+    background: var(--background-base-low);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vc-cal-note-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.vc-cal-note-time {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-subtle) !important;
+}
+
+.vc-cal-note-actions {
+    display: flex;
+    gap: 2px;
+}
+
+.vc-cal-note-action-btn {
+    background: none;
+    border: none;
+    color: var(--text-subtle) !important;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vc-cal-note-action-btn:hover {
+    color: var(--text-strong) !important;
+    background: var(--esharq-tint-strong);
+}
+
+.vc-cal-note-action-btn.vc-cal-delete:hover {
+    color: #f23838 !important;
+}
+
+.vc-cal-note-text {
+    font-size: 13px;
+    color: var(--text-default) !important;
+    overflow-wrap: break-word;
+}
+
+.vc-cal-note-discord-ts {
+    font-size: 11px;
+    color: var(--text-muted) !important;
+    background: var(--background-base-lowest);
+    padding: 4px 6px;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.vc-cal-notes-empty {
+    font-size: 12px;
+    color: var(--text-muted) !important;
+    text-align: center;
+    padding: 16px 0;
+    font-style: italic;
+}

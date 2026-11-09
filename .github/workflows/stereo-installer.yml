@@ -1,0 +1,45 @@
+name: StereoInstaller checks
+
+on:
+  push:
+    branches: [codex/stereo-standalone]
+  pull_request:
+    paths:
+      - src/userplugins/StereoInstaller.discordDesktop/**
+      - src/userplugins/GuildQuiet.discordDesktop/**
+      - src/userplugins/MicSettings.discordDesktop/**
+      - src/userplugins/StereoMic.discordDesktop/**
+      - scripts/verifyMicSettings.mjs
+      - scripts/verifyCustomPlugins.mjs
+      - scripts/verifyStereo*.mjs
+      - scripts/verifyExternalPlugins.mjs
+      - scripts/stereoWorkerHarness.ps1
+      - .github/workflows/stereo-installer.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@11.22.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec tsc --noEmit
+      - run: node scripts/verifyMicSettings.mjs
+      - run: node scripts/verifyCustomPlugins.mjs
+      - run: node scripts/verifyExternalPlugins.mjs
+      - run: node scripts/verifyStereoInstaller.mjs
+      - run: node scripts/verifyStereoStandalone.mjs
+      - name: Verify StereoInstaller in Electron
+        shell: pwsh
+        run: |
+          npm install --prefix "$env:RUNNER_TEMP/stereo-electron" --no-save --package-lock=false electron@41.2.1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyStereoElectron.mjs "$env:RUNNER_TEMP/stereo-electron/node_modules/electron/dist/electron.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - run: pnpm buildStandalone --disable-updater

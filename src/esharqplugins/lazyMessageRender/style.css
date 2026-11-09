@@ -1,0 +1,16 @@
+/* content-visibility أُزيل: مُقطِّع ديسكورد الافتراضي (virtualized scroller) يُخطئ قياس
+ * الصفوف المحتواة بعد تحديثاته، فيسبّب قفز التمرير عند المرور على الرسالة وقصّ شريط
+ * الأدوات. نُبقي فقط رفع الطبقة (z-index) كي لا يُقصّ شريط الأدوات تحت الرسالة الأعلى. */
+
+[--messageListItem]:hover,
+[--messageListItem]:focus-within {
+    position: relative;
+    z-index: 2;
+}
+
+[--messageListItem]:hover + [--messageListItem],
+[--messageListItem]:focus-within + [--messageListItem],
+[--messageListItem]:has(+ [--messageListItem]:hover),
+[--messageListItem]:has(+ [--messageListItem]:focus-within) {
+    z-index: 1;
+}

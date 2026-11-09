@@ -1,0 +1,119 @@
+.esharq-xp {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.esharq-xp-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--background-base-lowest);
+}
+
+.esharq-xp-head {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.esharq-xp-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-strong);
+}
+
+.esharq-xp-hint {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.esharq-xp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.esharq-xp-input {
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-default);
+    text-transform: none;
+    background: var(--background-base-lowest, var(--background-base-lowest));
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.esharq-xp-input:focus {
+    border-color: var(--brand-500, #5865f2);
+    outline: none;
+}
+
+.esharq-xp-search {
+    margin-block: 4px;
+}
+
+.esharq-xp-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-block-start: 4px;
+}
+
+.esharq-xp-ok {
+    font-size: 13px;
+    color: var(--status-positive, #23a55a);
+}
+
+.esharq-xp-bad {
+    font-size: 13px;
+    color: var(--status-danger, #f23f43);
+}
+
+.esharq-xp-friend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-block: 10px;
+    border-block-start: 1px solid var(--border-subtle);
+}
+
+.esharq-xp-friend-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-default);
+}
+
+.esharq-xp-friend-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 8px;
+}
+
+.esharq-xp-add {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.esharq-xp-add .esharq-xp-input {
+    flex: 1;
+}
+
+.esharq-xp-friend-top {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}

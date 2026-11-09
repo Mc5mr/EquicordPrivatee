@@ -1,0 +1,154 @@
+name: Private Windows build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Optional matching public release tag, for example equicord-v25-67'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    if: github.event.repository.private == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+      - name: Materialize the tested private source on first build
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -d src ]; then exit 0; fi
+          base="$RUNNER_TEMP/equicord-base"
+          git init "$base"
+          git -C "$base" remote add origin https://github.com/Equicord/Equicord.git
+          git -C "$base" fetch --depth=1 origin 957307d5f034028bb31ab0ac52ea1a6e90b6d43a
+          git -C "$base" archive FETCH_HEAD | tar --exclude='.github/workflows/*' -x
+          python3 build-input/unpack.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'Import tested Equicord source and 44 private plugins'
+          git push origin HEAD:main
+  build:
+    needs: prepare
+    if: github.event.repository.private == true
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@12.8.1
+      - run: pnpm install --frozen-lockfile
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Verify TypeScript
+        shell: pwsh
+        run: |
+          pnpm exec tsc --noEmit
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify bundled Stereo Hub and custom plugins
+        shell: pwsh
+        run: |
+          python scripts/verifyProdHallowStereo.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyProdHallowStereo.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyModalCompatibility.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyReadAllDMs.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyPluginLifecycle.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyMc5mrUpdates.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyStockPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyFakeFriends.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyCustomPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyBundledUserPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyExternalPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build private Equicord
+        env:
+          EQUICORD_HASH: ${{ inputs.release_tag || format('equicord-v25-{0}', github.run_number) }}
+          EQUICORD_REMOTE: ${{ github.repository }}
+        run: pnpm buildStandalone --disable-updater
+      - run: python -m pip install pyinstaller==6.16.0
+      - run: node scripts/buildStereoHub.mjs
+      - run: node scripts/packagePrivateBuild.mjs
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: installer/go.sum
+      - uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e
+        id: msys2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
+      - name: Test and build the GUI
+        shell: pwsh
+        working-directory: installer
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          $compilerBin = Join-Path $env:MSYS2_ROOT "mingw64/bin"
+          $env:Path = "$compilerBin;" + $env:Path
+          $env:CC = Join-Path $compilerBin "gcc.exe"
+          $env:CXX = Join-Path $compilerBin "g++.exe"
+          $env:CGO_ENABLED = "1"
+          go test -count=1 -tags mc5mr_bundle_test github_downloader.go private_github.go private_github_test.go app_asar.go self_updater.go self_update_windows.go self_updater_test.go installer_bundle_test.go bundle_test_support.go
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          go test -count=1 -tags mc5mr_repair_test unpatch_logic.go app_asar.go unpatch_logic_test.go repair_test_support.go
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          go build -buildvcs=false -tags static -ldflags "-s -w -H=windowsgui -extldflags=-static -X equilotl/buildinfo.InstallerGitHash=${{ github.sha }} -X equilotl/buildinfo.InstallerTag=${{ inputs.release_tag || format('equicord-v25-{0}', github.run_number) }}" -o build/Mc5mr-Equicord-Installer.exe .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $guiHash = (Get-FileHash -LiteralPath build/Mc5mr-Equicord-Installer.exe -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -LiteralPath build/Mc5mr-Equicord-Installer.exe.sha256 -Value $guiHash -Encoding ascii
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Mc5mr-Equicord-GUI
+          path: |
+            installer/build/Mc5mr-Equicord-Installer.exe
+            installer/build/Mc5mr-Equicord-Installer.exe.sha256
+            installer/bundle/desktop.asar
+            installer/bundle/desktop.sha256
+      - name: Publish only to this private repository
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BUILD_NUMBER: ${{ inputs.release_tag != '' && replace(inputs.release_tag, 'equicord-v25-', '') || github.run_number }}
+        run: |
+          $private = gh api "repos/$env:REPOSITORY" --jq '.private'
+          if ($LASTEXITCODE -ne 0 -or $private -ne 'true') { throw "Private repository verification failed" }
+          gh release create "equicord-v25-$env:BUILD_NUMBER" installer/build/Mc5mr-Equicord-Installer.exe installer/build/Mc5mr-Equicord-Installer.exe.sha256 installer/bundle/desktop.asar installer/bundle/desktop.sha256 --repo "$env:REPOSITORY" --title "Mc5mr Equicord v25" --notes "Replace legacy stereo settings with the bundled Discord Audio Collective Stereo Hub. Remove upper Follow and voice room search, and place Read All at the far left. Retain verified updates on the next full restart. Upstream stereo project is discontinued; live receiver audio compatibility remains unverified."
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Publish verified binaries to the account-free feed
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.PUBLIC_RELEASE_TOKEN }}
+          RELEASE_TAG: equicord-v25-${{ github.run_number }}
+        run: |
+          if (-not $env:GH_TOKEN) { 'PUBLIC_RELEASE_TOKEN is not configured. Private artifacts are ready; public publication requires the repository owner to configure this secret.' | Out-File -Append $env:GITHUB_STEP_SUMMARY; exit 0 }
+          python scripts/publishPublicRelease.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

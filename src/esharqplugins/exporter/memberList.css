@@ -1,0 +1,12 @@
+.vc-memberlist-export-button {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subtle);
+}
+
+.vc-memberlist-export-button:hover {
+    color: var(--text-strong);
+}

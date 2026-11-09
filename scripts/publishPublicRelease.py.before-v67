@@ -1,0 +1,101 @@
+import base64
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import struct
+import subprocess
+import urllib.request
+
+
+def api(endpoint, payload=None):
+    command = ["gh", "api", endpoint]
+    if payload is not None:
+        command += ["--method", "PUT", "--input", "-"]
+    result = subprocess.run(command, input=json.dumps(payload) if payload is not None else None,
+                            text=True, capture_output=True, check=True)
+    return json.loads(result.stdout)
+
+
+def embedded_asar_range(binary):
+    """Return the byte range of the installer’s embedded ASAR archive."""
+    marker = b'{"files":'
+    json_offset = binary.find(marker)
+    if json_offset < 16:
+        raise ValueError("Could not locate the embedded ASAR header")
+    archive_start = json_offset - 16
+    header_length = struct.unpack_from("<I", binary, archive_start + 12)[0]
+    try:
+        header = json.loads(binary[json_offset:json_offset + header_length])
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("The embedded ASAR header is invalid") from exc
+
+    max_content_end = 0
+
+    def walk(node):
+        nonlocal max_content_end
+        if not isinstance(node, dict):
+            return
+        if "offset" in node and "size" in node:
+            max_content_end = max(max_content_end, int(node["offset"]) + int(node["size"]))
+        for child in node.get("files", {}).values():
+            walk(child)
+
+    walk(header)
+    # Chromium's ASAR pickle has five bytes between the JSON and file payload.
+    archive_end = json_offset + header_length + 5 + max_content_end
+    if archive_end > len(binary):
+        raise ValueError("The embedded ASAR extends past the installer")
+    return archive_start, archive_end
+
+
+def publish():
+    repository = "Mc5mr/Vencord"
+    version = os.environ["RELEASE_TAG"]
+    if not re.fullmatch(r"equicord-v[1-9][0-9]*-[1-9][0-9]*", version):
+        raise ValueError("Invalid version")
+    paths = [Path("installer/build/Mc5mr-Equicord-Installer.exe"), Path("installer/build/Mc5mr-Equicord-Installer.exe.sha256"),
+             Path("installer/bundle/desktop.asar"), Path("installer/bundle/desktop.sha256")]
+    # The self-updater compares the embedded installer tag to the release feed.
+    # Reused GUI binaries otherwise keep advertising an old GUI version forever.
+    executable = paths[0]
+    binary = executable.read_bytes()
+    asar_start, asar_end = embedded_asar_range(binary)
+    matches = [m for m in re.finditer(rb"equicord-v[1-9][0-9]*-[1-9][0-9]*", binary)
+               if not asar_start <= m.start() < asar_end]
+    gui_versions = {m.group(0) for m in matches}
+    if len(gui_versions) != 1 or not matches:
+        raise ValueError("Expected one GUI release version outside the embedded app package")
+    old_version = next(iter(gui_versions))
+    new_version = version.encode("ascii")
+    if len(old_version) != len(new_version):
+        raise ValueError("GUI version length changed; rebuild the installer with the Go toolchain")
+    if old_version != new_version:
+        mutable = bytearray(binary)
+        for match in matches:
+            mutable[match.start():match.end()] = new_version
+        binary = bytes(mutable)
+        executable.write_bytes(binary)
+    paths[1].write_text(hashlib.sha256(binary).hexdigest() + "\n", encoding="ascii")
+    assets = [{"name": p.name, "size": p.stat().st_size, "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
+    for binary, checksum in [(paths[0], paths[1]), (paths[2], paths[3])]:
+        if hashlib.sha256(binary.read_bytes()).hexdigest() != checksum.read_text().strip():
+            raise ValueError("Build checksum mismatch")
+    subprocess.run(["gh", "release", "create", version, *map(str, paths), "--repo", repository, "--target", "equicord-updates", "--latest",
+                    "--title", "Mc5mr Equicord " + version,
+                    "--notes", "Updates Equicord to the latest upstream source, restores responsive plugin toggles, and fixes Stereo Hub setup with verified stereo profiles for PTB 1.0.1225. QuestSpoofer is excluded. The bundled package and installer are rebuilt and verified; existing settings are preserved."], check=True)
+    for asset in assets:
+        url = f"https://github.com/{repository}/releases/download/{version}/{asset['name']}"
+        with urllib.request.urlopen(urllib.request.Request(url, method="HEAD"), timeout=60) as response:
+            if response.status != 200:
+                raise ValueError("Anonymous release access failed")
+    current = api(f"repos/{repository}/contents/latest.json?ref=equicord-updates")
+    feed = json.dumps({"tag_name": version, "draft": False, "prerelease": False, "assets": assets}, indent=2) + "\n"
+    api(f"repos/{repository}/contents/latest.json", {"message": "Update verified Equicord feed", "branch": "equicord-updates",
+        "sha": current["sha"], "content": base64.b64encode(feed.encode()).decode()})
+    print("Published four compiled assets and verified account-free downloads.")
+
+
+if __name__ == "__main__":
+    publish()

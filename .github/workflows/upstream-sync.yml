@@ -1,0 +1,80 @@
+name: Keep Equicord current
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: equicord-upstream-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    if: github.event.repository.private == true
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.13'
+      - name: Merge upstream without overwriting the private edition
+        id: upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=$(cat .upstream-version)
+          git remote add upstream https://github.com/Equicord/Equicord.git
+          git fetch --no-tags upstream "$base" 'dev:refs/remotes/upstream/dev'
+          tip=$(git rev-parse refs/remotes/upstream/dev)
+          if [ "$base" = "$tip" ]; then echo 'changed=false' >> "$GITHUB_OUTPUT"; exit 0; fi
+          git diff --binary "$base" "$tip" -- . ':!src/userplugins' ':!.github' ':!installer' ':!build-input' ':!scripts/verify*' ':!scripts/packagePrivateBuild.mjs' ':!scripts/publishPublicRelease.py' ':!README.md' ':!AGENTS.md' ':!.upstream-version' > "$RUNNER_TEMP/upstream.patch"
+          if ! git apply --3way --index "$RUNNER_TEMP/upstream.patch"; then
+            echo 'Upstream conflicts with private changes. Main and the published build were preserved.' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          printf '%s\n' "$tip" > .upstream-version
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+      - if: steps.upstream.outputs.changed == 'true'
+        run: npm install --global pnpm@12.8.1
+      - if: steps.upstream.outputs.changed == 'true'
+        run: pnpm install --frozen-lockfile
+      - name: Validate the merged client
+        if: steps.upstream.outputs.changed == 'true'
+        shell: pwsh
+        run: |
+          pnpm exec tsc --noEmit
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/verifyProdHallowStereo.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyProdHallowStereo.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyPluginLifecycle.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyStockPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyCustomPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node scripts/verifyExternalPlugins.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          pnpm buildStandalone --disable-updater
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Save the tested update and request a Windows release build
+        if: steps.upstream.outputs.changed == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Sync tested Equicord upstream changes'
+          git push origin HEAD:main
+          gh workflow run private-build.yml --repo "$GITHUB_REPOSITORY" --ref main

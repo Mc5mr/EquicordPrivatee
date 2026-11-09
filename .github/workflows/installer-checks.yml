@@ -1,0 +1,49 @@
+name: Private GUI updater checks
+
+on:
+  pull_request:
+    paths:
+      - installer/**
+      - .github/workflows/installer-checks.yml
+      - .github/workflows/private-build.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: installer/go.sum
+      - uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e
+        id: msys2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
+      - name: Verify GUI updater and build without publishing
+        shell: pwsh
+        working-directory: installer
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: |
+          $compilerBin = Join-Path $env:MSYS2_ROOT "mingw64/bin"
+          $env:Path = "$compilerBin;" + $env:Path
+          $env:CC = Join-Path $compilerBin "gcc.exe"
+          $env:CXX = Join-Path $compilerBin "g++.exe"
+          $env:CGO_ENABLED = "1"
+          New-Item -ItemType Directory -Path bundle -Force | Out-Null
+          $testBundle = [Text.Encoding]::UTF8.GetBytes(('Test-only GUI bundle ' * 100))
+          [IO.File]::WriteAllBytes((Join-Path (Get-Location).Path 'bundle/desktop.asar'), $testBundle)
+          $testHash = (Get-FileHash -LiteralPath bundle/desktop.asar -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -LiteralPath bundle/desktop.sha256 -Value $testHash -Encoding ascii
+          go test -count=1 -timeout=3m -tags mc5mr_bundle_test github_downloader.go private_github.go private_github_test.go app_asar.go self_updater.go self_update_windows.go self_updater_test.go installer_bundle_test.go bundle_test_support.go
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          go test -count=1 -tags mc5mr_repair_test unpatch_logic.go app_asar.go unpatch_logic_test.go repair_test_support.go
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          go build -buildvcs=false -tags static -ldflags "-s -w -H=windowsgui -extldflags=-static -X equilotl/buildinfo.InstallerTag=private-v19-999999" -o build/GUI-updater-check.exe .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
