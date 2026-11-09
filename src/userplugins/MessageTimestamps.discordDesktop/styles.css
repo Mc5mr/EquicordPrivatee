@@ -1,0 +1,8 @@
+.vc-mc5mr-message-age {
+    display: inline-block;
+    margin-inline-start: 6px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 400;
+    white-space: nowrap;
+}

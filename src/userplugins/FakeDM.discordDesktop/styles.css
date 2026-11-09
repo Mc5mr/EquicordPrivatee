@@ -1,0 +1,72 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-nc-fdm-panel { display: grid; gap: 12px; color: var(--text-normal, #eee); }
+.vc-nc-fdm-title { font-size: 13px; font-weight: 800; letter-spacing: .04em; color: var(--text-muted, #a3a6aa); }
+.vc-nc-fdm-tabs, .vc-nc-fdm-people { display: flex; gap: 6px; }
+.vc-nc-fdm-people { flex-wrap: wrap; }
+.vc-nc-fdm-tab, .vc-nc-fdm-now, .vc-nc-fdm-person { background: var(--background-modifier-accent, rgb(127 127 127 / 12%)); color: var(--text-muted, #a3a6aa); border: 1px solid transparent; border-radius: 6px; cursor: pointer; }
+.vc-nc-fdm-tab { flex: 1; padding: 6px; font-size: 12px; font-weight: 700; }
+.vc-nc-fdm-tab.vc-nc-fdm-selected { background: var(--brand-500, #5865f2); color: #fff; }
+.vc-nc-fdm-person { display: flex; flex: 1 1 130px; min-width: 0; align-items: center; gap: 8px; padding: 6px 10px; text-align: left; font-weight: 600; }
+.vc-nc-fdm-person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vc-nc-fdm-person.vc-nc-fdm-selected { border-color: var(--brand-500, #5865f2); color: var(--text-normal, #fff); background: color-mix(in srgb, var(--brand-500, #5865f2) 15%, transparent); }
+.vc-nc-fdm-date-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted, #a3a6aa); }
+.vc-nc-fdm-date-row input, .vc-nc-fdm-call-options input { min-width: 0; flex: 1; border: 1px solid var(--border-subtle, rgb(127 127 127 / 15%)); border-radius: 6px; padding: 6px 8px; background: var(--background-base-lowest, #202225); color: var(--text-normal, #fff); color-scheme: dark; }
+.vc-nc-fdm-now { padding: 6px 8px; font-weight: 700; }
+.vc-nc-fdm-input-row { display: flex; gap: 8px; }
+.vc-nc-fdm-input-row textarea { flex: 1; min-width: 0; min-height: 58px; box-sizing: border-box; resize: vertical; padding: 10px; border: 1px solid var(--border-subtle, rgb(127 127 127 / 25%)); border-radius: 8px; background: var(--background-base-lowest, #202225); color: var(--text-normal, #eee); font: inherit; }
+.vc-nc-fdm-actions { display: flex; flex-direction: column; gap: 6px; min-width: 66px; }
+.vc-nc-fdm-status { min-height: 13px; font-size: 11px; color: var(--text-muted, #a3a6aa); }
+.vc-nc-fdm-call-options { display: flex; align-items: center; gap: 6px; }
+.vc-nc-fdm-call-options label { white-space: nowrap; font-size: 11px; }
+.vc-nc-fdm-call-options input { width: 40px; }
+.vc-nc-fdm-panel button:focus-visible, .vc-nc-fdm-panel input:focus-visible, .vc-nc-fdm-panel textarea:focus-visible { outline: 2px solid var(--brand-500, #5865f2); outline-offset: 2px; }
+
+.vc-nc-fdm-actions .vc-btn-base { border-radius: 6px; min-height: 29px; padding: 5px 10px; font-size: 12px; font-weight: 700; }
+.vc-nc-fdm-actions .vc-btn-primary { background: var(--brand-500, #5865f2); color: #fff; }
+.vc-nc-fdm-actions .vc-btn-dangerSecondary { color: var(--text-danger, #ed4245); background: var(--background-modifier-accent, rgb(127 127 127 / 12%)); }
+
+.vc-nc-fdm-floating { position: fixed; z-index: 10001; right: clamp(16px, 24vw, 460px); bottom: 110px; width: 432px; max-width: calc(100vw - 32px); max-height: calc(100vh - 80px); overflow-y: auto; box-sizing: border-box; border: 1px solid var(--border-subtle, rgb(127 127 127 / 25%)); border-radius: 8px; background: var(--background-surface-high, var(--background-secondary, #292b2f)); color: var(--text-normal, #eee); box-shadow: 0 10px 32px rgb(0 0 0 / 25%); }
+.vc-nc-fdm-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--border-subtle, rgb(127 127 127 / 15%)); }
+.vc-nc-fdm-header button { cursor: pointer; color: var(--text-muted); background: transparent; border: 0; font-size: 22px; line-height: 20px; border-radius: 4px; }
+.vc-nc-fdm-header button:hover { color: var(--text-normal); background: var(--background-modifier-hover); }
+.vc-nc-fdm-header button:focus-visible { outline: 2px solid var(--brand-500); }
+.vc-nc-fdm-panel { gap: 9px; padding: 12px; font-size: 12px; }
+.vc-nc-fdm-people { padding-bottom: 9px; border-bottom: 1px solid var(--border-subtle, rgb(127 127 127 / 15%)); }
+.vc-nc-fdm-input-row textarea { font-size: 12px; padding: 8px; min-height: 58px; }
+.vc-nc-fdm-person { padding: 5px 8px; }
+@media (max-width: 650px) { .vc-nc-fdm-floating { right: 16px; bottom: 90px; } }
+
+.vc-nc-fdm-floating {
+    right: 24px;
+    bottom: 88px;
+    width: 420px;
+    border-radius: 16px;
+    border-color: var(--border-subtle, rgb(127 127 127 / 20%));
+    background: var(--background-surface-high, #24262c);
+    box-shadow: 0 18px 60px rgb(0 0 0 / 35%);
+    scrollbar-width: thin;
+}
+.vc-nc-fdm-header { gap: 12px; padding: 16px 18px 12px; border: 0; }
+.vc-nc-fdm-header > div { display: grid; gap: 4px; min-width: 0; }
+.vc-nc-fdm-title { color: var(--text-normal); font-size: 15px; font-weight: 650; letter-spacing: 0; }
+.vc-nc-fdm-header small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--text-muted); }
+.vc-nc-fdm-header .vc-btn-base { min-width: 28px; width: 28px; height: 28px; padding: 0; font-size: 22px; }
+.vc-nc-fdm-panel { padding: 0 18px 18px; gap: 14px; font-size: 13px; }
+.vc-nc-fdm-tabs { padding: 4px; border-radius: 10px; background: var(--background-base-lowest, #1c1e23); }
+.vc-nc-fdm-tab { min-height: 32px; border-radius: 7px; background: transparent; font-weight: 600; }
+.vc-nc-fdm-tab.vc-nc-fdm-selected { background: var(--brand-500, #5865f2); box-shadow: 0 2px 6px rgb(0 0 0 / 12%); }
+.vc-nc-fdm-people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 148px; overflow-y: auto; scrollbar-width: thin; padding: 0; border: 0; }
+.vc-nc-fdm-person { min-height: 40px; padding: 8px 10px; border-radius: 9px; font-size: 12px; font-weight: 500; }
+.vc-nc-fdm-date-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; font-size: 12px; }
+.vc-nc-fdm-date-row input { min-height: 34px; border-radius: 8px; }
+.vc-nc-fdm-input-row { display: grid; gap: 10px; }
+.vc-nc-fdm-input-row textarea { width: 100%; min-height: 88px; font-size: 13px; padding: 12px; border-radius: 10px; }
+.vc-nc-fdm-actions { flex-direction: row; justify-content: flex-end; }
+.vc-nc-fdm-actions .vc-btn-base { min-height: 34px; padding: 7px 16px; border-radius: 8px; font-weight: 600; }
+.vc-nc-fdm-status { font-size: 12px; }
+@media (max-width: 480px) { .vc-nc-fdm-floating { right: 12px; width: calc(100vw - 24px); bottom: 80px; } }

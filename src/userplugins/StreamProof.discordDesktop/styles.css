@@ -1,0 +1,13 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+[id^="message-content-"] {
+    filter: blur(3.5px) !important; /* Override native message formatting while masking is active. */
+}
+
+[id^="message-accessories-"] :is(img, video, canvas, iframe, object, embed) {
+    filter: blur(12px) !important; /* Prevent native media and hover rules from revealing masked attachments. */
+}

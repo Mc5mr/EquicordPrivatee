@@ -1,0 +1,46 @@
+{
+  "repository": "https://github.com/ProdHallow/Discord-Stereo-Windows-MacOS-Linux",
+  "commit": "f6a67e931b0880271591339637727e2e5f45cebf",
+  "upstreamPath": "Updates/Nodes/Patched Nodes (for Installer)/Windows",
+  "originalGitBlob": "3f93c7ce2d084d7f8533b31c43d929aa7f0f4080",
+  "patchedGitBlob": "3fef7818e5b1aa88361b5cadfd9c7a4293562bf3",
+  "packageSha256": "179864716c7354e0bf21eae0ba168c2b70d707eba476e53a6d151e5ee9f4fa91",
+  "files": {
+    "audio_effects_helper.exe": {
+      "bytes": 289208,
+      "sha256": "0e10d1ef86d6a3782a625e61e454e5bc20cf1a9f56b85eef5e254ad55832f35c"
+    },
+    "discord_voice.node": {
+      "bytes": 14817208,
+      "sha256": "dccda1f5770572523429abca88dcb3a5bbbca7b7703e119391ad3751fafb7a42"
+    },
+    "gpu_encoder_helper.exe": {
+      "bytes": 910264,
+      "sha256": "74677216d2c1e525cd7334e053a6e51c1748461d87430660099b6c204761db96"
+    },
+    "index.js": {
+      "bytes": 21874,
+      "sha256": "f423f18bbce8ed32b9626bf70d839e83eb8a0f97ea01d08a8a8ec00cb7f0a1f6"
+    },
+    "manifest.json": {
+      "bytes": 263,
+      "sha256": "339f1dbbb76936f060cc858f596ceff9c6b3b0cdd98df5b172a895e3c29c17d0"
+    },
+    "mediapipe.dll": {
+      "bytes": 8675256,
+      "sha256": "4d6e5b6c1f35c6dd46e8d8cfa88d21f4a88945795f29a24d6c7d4040312a018a"
+    },
+    "package.json": {
+      "bytes": 23,
+      "sha256": "4e7956363d9c3a1459953eb904448cc8ca31ff7af729ceda904120d8787bebc6"
+    },
+    "selfie_segmentation.tflite": {
+      "bytes": 249505,
+      "sha256": "9ee168ec7c8f2a16c56fe8e1cfbc514974cbbb7e434051b455635f1bd1462f5c"
+    },
+    "selfie_segmentation_landscape.tflite": {
+      "bytes": 250145,
+      "sha256": "a77d03f4659b9f6b6c1f5106947bf40e99d7655094b6527f214ea7d451106edd"
+    }
+  }
+}

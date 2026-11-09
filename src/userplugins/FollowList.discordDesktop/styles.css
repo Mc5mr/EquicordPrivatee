@@ -1,0 +1,145 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-mc5mr-follow-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-height: 0;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.vc-mc5mr-follow-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    min-height: 0;
+    min-width: 0;
+    padding: 2px 8px 16px 0;
+}
+
+.vc-mc5mr-follow-content h3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 4px 0 0;
+    text-align: left;
+}
+
+.vc-mc5mr-follow-rows {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    gap: 8px;
+}
+
+.vc-mc5mr-follow-row {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    min-height: 62px;
+    min-width: 0;
+    padding: 8px 14px;
+    direction: ltr;
+    border-radius: 7px;
+    background: transparent;
+}
+
+.vc-mc5mr-follow-row:hover {
+    background: var(--background-modifier-hover, rgb(127 127 127 / 10%));
+}
+
+.vc-mc5mr-follow-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.vc-mc5mr-follow-identity strong {
+    font-size: 16px;
+    font-weight: 650;
+}
+
+.vc-mc5mr-follow-identity strong, .vc-mc5mr-follow-identity span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vc-mc5mr-follow-identity span {
+    color: var(--nc-fg);
+    font-size: 13px;
+}
+
+.vc-mc5mr-follow-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.vc-mc5mr-follow-row .vc-btn-base {
+    min-height: 30px;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.vc-mc5mr-follow-empty {
+    padding: 12px 8px 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--nc-fg);
+}
+
+.vc-mc5mr-follow-settings-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    padding: 4px 8px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.vc-mc5mr-follow-setting {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vc-mc5mr-follow-enabled, .vc-mc5mr-follow-disabled {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--status-positive, #43b581);
+    flex-shrink: 0;
+}
+
+.vc-mc5mr-follow-disabled {
+    background: var(--status-danger, #ed4245);
+}
+
+[data-mana-component="modal"]:has(.vc-mc5mr-follow-modal) {
+    width: min(604px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    height: min(802px, calc(100dvh - 48px));
+    max-height: calc(100dvh - 48px);
+    box-sizing: border-box;
+}
+
+@media (width <= 480px) {
+    .vc-mc5mr-follow-row {
+        grid-template-columns: 40px minmax(0, 1fr);
+        padding-inline: 4px;
+    }
+
+    .vc-mc5mr-follow-row .vc-mc5mr-follow-actions {
+        grid-column: 2;
+        min-width: 0;
+    }
+}

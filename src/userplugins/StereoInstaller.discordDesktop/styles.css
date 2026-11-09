@@ -1,0 +1,49 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-mc5mr-stereo {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.vc-mc5mr-stereo select {
+    min-height: 42px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--nc-border);
+    background: var(--nc-field);
+    color: var(--nc-fg);
+    opacity: 1;
+}
+
+.vc-mc5mr-stereo-path {
+    padding: 10px 12px;
+    border: 1px solid var(--nc-border);
+    border-radius: 8px;
+    background: var(--nc-field);
+    overflow-wrap: anywhere;
+}
+
+.vc-mc5mr-stereo-info {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 8px 14px;
+    padding: 16px;
+    margin: 0;
+    border-radius: 10px;
+    background: var(--nc-surface);
+}
+
+.vc-mc5mr-stereo-info dt {
+    color: var(--nc-muted);
+    font-size: 12px;
+}
+
+.vc-mc5mr-stereo-info dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}

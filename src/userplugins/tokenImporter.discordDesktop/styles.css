@@ -1,0 +1,36 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-ti-title { display: inline-flex; align-items: center; gap: 8px; }
+.vc-ti-shell { display: flex; flex-direction: column; gap: 16px; min-width: 0; max-height: 70vh; overflow: auto; }
+.vc-ti-shell section { min-width: 0; }
+.vc-ti-tabs, .vc-ti-toolbar-actions, .vc-ti-import-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.vc-ti-tabs { border-bottom: 1px solid var(--background-modifier-accent); padding-bottom: 8px; }
+.vc-ti-tab { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; color: var(--text-muted); }
+.vc-ti-tab-active { color: var(--header-primary); background: var(--background-modifier-selected); box-shadow: inset 0 -2px var(--brand-500); }
+.vc-ti-badge { padding: 2px 7px; background: var(--background-modifier-accent); border-radius: 10px; font-size: 12px; }
+.vc-ti-toolbar { display: grid; gap: 12px; margin-bottom: 16px; }
+.vc-ti-search { width: 100%; min-width: 0; box-sizing: border-box; }
+.vc-ti-shell :is(input, textarea) { box-sizing: border-box; width: 100%; min-width: 0; padding: 10px 12px; border: 1px solid var(--background-modifier-accent); border-radius: 8px; background: var(--input-background, var(--background-tertiary)); color: var(--text-normal); font: inherit; }
+.vc-ti-shell :is(input, textarea):focus-visible { outline: 2px solid var(--brand-500); outline-offset: 1px; }
+.vc-ti-toolbar-actions > button { flex: 1 1 auto; gap: 6px; }
+.vc-ti-accounts { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow: auto; }
+.vc-ti-account { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px; background: var(--background-secondary); border: 1px solid var(--background-modifier-accent); border-radius: 10px; }
+.vc-ti-account-main { display: flex; align-items: center; justify-content: flex-start; flex: 1 1 180px; min-width: 0; gap: 12px; padding: 0; text-align: start; }
+.vc-ti-identity { display: flex; flex-direction: column; min-width: 0; gap: 4px; }
+.vc-ti-identity strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vc-ti-avatar { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: var(--brand-500); color: white; }
+.vc-ti-masked-token { color: var(--text-muted); font-size: 12px; }
+.vc-ti-remove { margin-inline-start: auto; }
+.vc-ti-input { width: 100%; resize: vertical; font-family: var(--font-code); }
+.vc-ti-input-masked { -webkit-text-security: disc; }
+.vc-ti-import-actions { margin-top: 12px; }
+.vc-ti-count { margin-inline-end: auto; }
+.vc-ti-count, .vc-ti-hint { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+.vc-ti-hint { margin: 12px 0 0; }
+.vc-ti-status, .vc-ti-notice { margin: 0; padding: 12px; background: var(--background-secondary); border: 1px solid var(--background-modifier-accent); border-radius: 8px; line-height: 1.5; overflow-wrap: anywhere; }
+.vc-ti-empty { margin: 0; padding: 28px 16px; background: var(--background-secondary); border-radius: 10px; color: var(--text-muted); text-align: center; line-height: 1.5; }
+.vc-mc5mr-header-button { color: var(--interactive-normal); }

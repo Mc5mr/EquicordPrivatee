@@ -1,0 +1,36 @@
+/* The search box over the bookmarks list in settings. The Bookmarked tab itself is Discord's own list. */
+.vc-bm-search {
+    flex: 0 0 auto;
+    padding: 9px 12px;
+    border: 1px solid var(--border-subtle, rgb(128 128 128 / 20%));
+    border-radius: var(--radius-sm, 8px);
+    background: var(--background-base-lowest, rgb(128 128 128 / 12%));
+    color: var(--text-default);
+    font-size: 16px;
+    font-family: var(--font-primary);
+}
+
+.vc-bm-search:focus {
+    border-color: var(--border-strong, rgb(128 128 128 / 45%));
+    outline: none;
+}
+
+.vc-bm-search::placeholder {
+    color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------- the list in settings */
+
+.vc-bm-panel .vc-bm-search {
+    margin-bottom: 8px;
+    padding: 7px 10px;
+    font-size: 14px;
+}
+
+.vc-bm-none-found {
+    padding: 12px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+}
+

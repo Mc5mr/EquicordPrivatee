@@ -1,0 +1,101 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+[class*="buttons_"]:has(> .vc-mc5mr-voice-dock) {
+    display: contents !important;
+}
+
+/* The API inserts inside the controls group. Flatten it so the dock spans
+ * the whole account row, including the avatar, without a fixed-height crop. */
+[class*="container_"]:has(> [class*="buttons_"] > .vc-mc5mr-voice-dock) {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 52px;
+    overflow: visible;
+}
+
+[class*="panels_"]:has(.vc-mc5mr-voice-dock) {
+    height: auto !important;
+    max-height: none !important;
+}
+
+.vc-mc5mr-voice-dock {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    flex: 0 0 100%;
+    order: -1;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    flex-shrink: 0;
+    padding: 4px 0 8px;
+    direction: ltr;
+}
+
+.vc-mc5mr-voice-dock .vc-mc5mr-voice-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    opacity: 1;
+    visibility: visible;
+}
+
+.vc-mc5mr-voice-dock .vc-mc5mr-voice-active {
+    color: var(--status-positive, #43b581) !important;
+}
+
+:has(> .vc-mc5mr-voice-dock) .vc-mc5mr-voice-original {
+    display: none;
+}
+
+.vc-mc5mr-voice-dock .vc-mc5mr-voice-cell svg {
+    color: inherit !important;
+    opacity: 1;
+    visibility: visible;
+}
+
+.vc-mc5mr-voice-dock .vc-mc5mr-voice-cell:disabled {
+    opacity: 0.45;
+}
+
+.vc-mc5mr-voice-settings-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 24px;
+}
+
+.vc-mc5mr-voice-gear {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+:has(> .vc-mc5mr-header-button) {
+    flex-wrap: nowrap;
+    gap: 4px;
+}
+
+.vc-mc5mr-header-button {
+    flex-shrink: 0;
+    margin: 0;
+    border-radius: 7px;
+    color: var(--interactive-icon-default, var(--interactive-normal, #b9bbbe));
+}
+
+.vc-mc5mr-header-button svg {
+    width: 18px;
+    height: 18px;
+}
+

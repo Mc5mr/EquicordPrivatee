@@ -1,0 +1,172 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-nc-panel,
+.vc-nc-notifications {
+    --nc-fg: var(--text-normal, #e6e8ef);
+    --nc-muted: var(--text-muted, #a1a6b2);
+    --nc-surface: var(--background-surface-high, var(--background-secondary, #25262d));
+    --nc-field: var(--background-base-lowest, var(--background-tertiary, #1b1c22));
+    --nc-border: var(--border-subtle, rgb(127 127 127 / 22%));
+    --nc-accent: var(--brand-500, #5865f2);
+    --nc-danger: var(--text-danger, #f08089);
+    color: var(--nc-fg);
+    font-size: 14px;
+    line-height: 1.6;
+    box-sizing: border-box;
+}
+
+.vc-nc-panel { display: grid; gap: 16px; min-width: 0; }
+.vc-nc-panel *, .vc-nc-notifications * { box-sizing: border-box; }
+.vc-nc-panel :is(h3, h4, p) { margin: 0; }
+.vc-nc-panel h3 { font-size: 15px; font-weight: 650; }
+.vc-nc-panel small, .vc-nc-muted { color: var(--nc-muted); font-size: 12px; }
+.vc-nc-toolbar, .vc-nc-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.vc-nc-toolbar { justify-content: space-between; }
+.vc-nc-section { display: grid; gap: 10px; }
+.vc-nc-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vc-nc-field { display: grid; gap: 7px; min-width: 0; }
+.vc-nc-field > span { font-size: 13px; font-weight: 600; }
+.vc-nc-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid var(--nc-border);
+    border-radius: 12px;
+    background: var(--nc-surface);
+}
+.vc-nc-row:hover { border-color: color-mix(in srgb, var(--nc-accent) 35%, var(--nc-border)); }
+.vc-nc-identity { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.vc-nc-identity strong, .vc-nc-identity span { overflow-wrap: anywhere; }
+.vc-nc-identity span { color: var(--nc-muted); font-size: 12px; }
+.vc-nc-scroll { display: grid; gap: 8px; max-height: min(430px, 52vh); overflow-y: auto; scrollbar-width: thin; padding: 2px; }
+.vc-nc-count { font-size: 12px; color: var(--nc-muted); }
+.vc-nc-empty { display: grid; gap: 6px; padding: 32px 18px; text-align: center; border: 1px dashed var(--nc-border); border-radius: 14px; }
+.vc-nc-empty p { color: var(--nc-muted); font-size: 13px; }
+.vc-nc-status { padding: 12px 14px; border-radius: 10px; border-inline-start: 3px solid var(--nc-accent); background: var(--nc-surface); overflow-wrap: anywhere; }
+.vc-nc-status.vc-nc-error { border-inline-start-color: var(--nc-danger); }
+.vc-nc-panel :is(input, textarea) { color: var(--nc-fg); border-radius: 10px; }
+.vc-nc-panel input { min-height: 38px; }
+.vc-nc-panel textarea { line-height: 1.6; resize: vertical; }
+.vc-nc-panel .vc-btn-base, .vc-nc-notifications .vc-btn-base { border-radius: 9px; gap: 6px; min-height: 32px; font-size: 14px; transition: background-color .15s, border-color .15s, opacity .15s; }
+.vc-nc-panel .vc-btn-primary, .vc-nc-notifications .vc-btn-primary { background: var(--nc-accent); color: #fff; }
+.vc-nc-panel .vc-btn-positive { background: var(--status-positive-background, #23865c); color: #fff; }
+.vc-nc-panel .vc-btn-secondary, .vc-nc-notifications .vc-btn-secondary { background: var(--nc-surface); color: var(--nc-fg); border-color: var(--nc-border); }
+.vc-nc-panel .vc-btn-none { background: transparent; color: var(--nc-fg); }
+.vc-nc-panel .vc-btn-dangerSecondary, .vc-nc-notifications .vc-btn-dangerSecondary { background: transparent; color: var(--nc-danger); border-color: color-mix(in srgb, var(--nc-danger) 25%, transparent); }
+.vc-nc-panel .vc-btn-base:focus-visible, .vc-nc-notifications .vc-btn-base:focus-visible { outline: 2px solid var(--nc-accent); outline-offset: 3px; }
+.vc-nc-panel .vc-btn-base:disabled { opacity: .45; }
+.vc-nc-panel [role="progressbar"] { height: 6px; overflow: hidden; background: var(--nc-field); border-radius: 999px; }
+.vc-nc-panel [role="progressbar"] > div { height: 100%; background: var(--nc-accent); }
+.vc-nc-notifications { position: fixed; z-index: 10000; display: grid; gap: 10px; max-width: calc(100vw - 32px); max-height: calc(100vh - 190px); overflow-y: auto; pointer-events: none; }
+.vc-nc-notification { pointer-events: auto; display: grid; gap: 12px; padding: 16px; border: 1px solid var(--nc-border); border-radius: 14px; background: var(--nc-surface); color: var(--nc-fg); box-shadow: 0 10px 32px rgb(0 0 0 / 25%); }
+.vc-nc-notification > strong { font-size: 14px; }
+.vc-nc-notification p { margin: 0; max-height: 180px; overflow-y: auto; overflow-wrap: anywhere; white-space: pre-wrap; }
+.vc-nc-typing { width: 380px; max-width: calc(100vw - 32px); text-align: start; cursor: pointer; font: inherit; }
+.vc-nc-typing span { color: var(--nc-muted); font-size: 12px; }
+.vc-nc-typing:focus-visible { outline: 2px solid var(--nc-accent); outline-offset: 3px; }
+.vc-mc5mr-header-button { color: var(--interactive-icon-default, var(--interactive-normal, #b9bbbe)); flex-shrink: 0; }
+.vc-mc5mr-open-dm-form { display: grid; gap: 12px; }
+.vc-nc-log-entry { display: grid; gap: 5px; padding: 12px; border: 1px solid var(--nc-border); border-radius: 10px; background: var(--nc-surface); overflow-wrap: anywhere; }
+.vc-nc-log-entry time { color: var(--nc-muted); font-size: 11px; }
+.vc-nc-profile-id { min-height: 24px; padding: 3px 7px; font-size: 10px; border-radius: 6px; color: var(--text-muted, #a1a6b2); background: var(--background-surface-high, #25262d); border: 1px solid var(--border-subtle, rgb(127 127 127 / 22%)); font-variant-numeric: tabular-nums; }
+
+@media (max-width: 580px) {
+    .vc-nc-grid { grid-template-columns: 1fr; }
+    .vc-nc-row { flex-wrap: wrap; }
+    .vc-nc-row > .vc-nc-actions { flex-basis: 100%; justify-content: flex-end; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .vc-nc-panel .vc-btn-base { transition: none; }
+}
+
+.vc-nc-profile-preview { margin-top: 8px; padding: 12px; border-radius: 12px; background: var(--background-surface-high, #2b2d31); overflow: hidden; }
+.vc-nc-profile-banner { width: 100%; max-height: 120px; object-fit: cover; border-radius: 8px; }
+
+/* Shared composer icons: preserve the native button wrappers and theme. */
+.vc-chatbar-button .vc-nc-composer-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 1;
+    color: var(--interactive-icon-default, var(--interactive-normal, #d4d0d2));
+}
+.vc-chatbar-button:hover .vc-nc-composer-icon {
+    color: var(--interactive-icon-hover, var(--interactive-hover, #fff));
+}
+
+.vc-nc-mention-stack { pointer-events: none; }
+.vc-nc-mention-card { display: grid; grid-template-columns: 40px minmax(0, 1fr) 118px; gap: 10px; align-items: center; padding: 9px; border: 1px solid var(--nc-border); border-radius: 5px; background: var(--background-surface-high, #292b2f); box-shadow: 0 5px 18px rgb(0 0 0 / 24%); pointer-events: auto; }
+.vc-nc-mention-identity { text-align: center; min-width: 0; }
+.vc-nc-mention-identity strong { display: block; font-size: 16px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.vc-nc-mention-identity p { margin: 0; font-size: 13px; line-height: 1.2; color: var(--nc-muted); }
+.vc-nc-mention-actions { display: grid; gap: 4px; }
+.vc-nc-mention-actions .vc-btn-base { width: 100%; min-height: 28px; padding: 3px 7px; font-size: 13px; border-radius: 5px; color: #fff; }
+.vc-nc-mention-actions .vc-btn-positive { background: #3ba55c; }
+.vc-nc-mention-actions .vc-btn-dangerPrimary { background: #ed4245; }
+.vc-nc-mention-actions .vc-btn-secondary { background: var(--background-modifier-accent, #4a4d55); }
+.vc-nc-typing-stack { width: 310px; pointer-events: none; }
+.vc-nc-typing-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; width: 100%; color: var(--nc-fg); font: inherit; text-align: left; background: var(--background-surface-high, #292b2f); border: 1px solid var(--nc-border); border-radius: 5px; box-shadow: 0 5px 18px rgb(0 0 0 / 24%); cursor: pointer; pointer-events: auto; }
+.vc-nc-typing-identity { display: grid; gap: 2px; min-width: 0; }
+.vc-nc-typing-identity strong { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vc-nc-typing-identity > span { font-size: 13px; color: var(--nc-muted); }
+.vc-nc-typing-dots { display: inline-flex; gap: 2px; margin-left: 4px; vertical-align: middle; }
+.vc-nc-typing-dots i { width: 3px; height: 3px; border-radius: 50%; background: currentColor; animation: vc-nc-typing-bounce 1.2s ease-in-out infinite; }
+.vc-nc-typing-dots i:nth-child(2) { animation-delay: 150ms; }
+.vc-nc-typing-dots i:nth-child(3) { animation-delay: 300ms; }
+@keyframes vc-nc-typing-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .vc-nc-typing-dots i { animation: none; } }
+
+.vc-nc-local-account-rows { display: grid; gap: 4px; margin-top: 8px; }
+.vc-nc-local-account-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px; background: var(--background-surface-high, #292b2f); color: var(--text-normal, #eee); border: 1px solid var(--border-subtle, #41434a); border-radius: 8px; text-align: start; cursor: pointer; font: inherit; }
+.vc-nc-local-account-row > span:first-of-type { flex: 1; display: grid; gap: 3px; }
+.vc-nc-local-account-row small { color: var(--text-muted); font-size: 12px; }
+.vc-nc-local-account-row[aria-pressed="true"] { border-color: var(--brand-500); }
+.vc-nc-local-account-row:focus-visible { outline: 2px solid var(--brand-500); }
+.vc-nc-local-account-row:disabled { opacity: .5; cursor: default; }
+
+/* Only custom controls: native Discord buttons retain their original layout. */
+.vc-nc-user-button, .vc-mc5mr-header-button { border-radius: 7px; transition: background-color 140ms ease, color 140ms ease; }
+.vc-nc-user-button { background: var(--background-modifier-accent, rgb(127 127 127 / 8%)); margin-inline: 2px; }
+.vc-nc-user-button:hover, .vc-mc5mr-header-button:hover { background: var(--background-modifier-hover, rgb(127 127 127 / 16%)); color: var(--interactive-hover, #fff); }
+.vc-nc-user-button[aria-checked="true"], .vc-chatbar-button .vc-nc-icon-active { color: var(--status-positive, #43b581) !important; }
+.vc-nc-user-button[aria-checked="true"] svg { color: inherit !important; }
+.vc-nc-user-button:focus-visible, .vc-mc5mr-header-button:focus-visible { outline: 2px solid var(--brand-500, #5865f2); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .vc-nc-user-button, .vc-mc5mr-header-button { transition: none; } }
+
+.vc-nc-account-label { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; width: 100%; }
+.vc-nc-account-label strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 500; }
+.vc-nc-account-check { width: 20px; height: 20px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--brand-500, #5865f2); color: #fff; font-size: 12px; }
+.vc-nc-local-account-row { border: 0; background: transparent; border-radius: 5px; padding: 8px; }
+.vc-nc-local-account-row:hover { background: var(--background-modifier-hover, rgb(127 127 127 / 12%)); }
+.vc-nc-local-management { display: grid; gap: 6px; padding: 12px 0; border-top: 1px solid var(--border-subtle, rgb(127 127 127 / 18%)); color: var(--text-normal); }
+.vc-nc-local-management h3 { margin: 0 8px 6px; font-size: 13px; color: var(--text-muted); }
+.vc-nc-local-management .vc-btn-base { min-height: 28px; color: var(--text-danger); border-radius: 5px; }
+
+.vc-mc5mr-header-button[aria-expanded="true"] { background: color-mix(in srgb, var(--brand-500, #5865f2) 16%, transparent); }
+.vc-mc5mr-header-button[aria-expanded="false"] .vc-heart-icon { opacity: .5; }
+
+.vc-nc-panel { gap: 14px; }
+.vc-nc-row, .vc-nc-log-entry { border-radius: 12px; background: var(--background-surface-high, #272930); }
+.vc-nc-notification, .vc-nc-mention-card, .vc-nc-typing-card {
+    border-radius: 12px;
+    border-color: var(--border-subtle, rgb(127 127 127 / 18%));
+    background: var(--background-surface-high, #272930);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 22%);
+}
+.vc-nc-mention-card { padding: 12px; gap: 12px; }
+.vc-nc-mention-identity strong { font-size: 14px; line-height: 1.4; }
+.vc-nc-mention-identity p { font-size: 12px; line-height: 1.45; }
+.vc-nc-mention-actions { gap: 6px; }
+.vc-nc-mention-actions .vc-btn-base { border-radius: 7px; font-size: 13px; font-weight: 600; min-height: 30px; }
+.vc-nc-typing-card { padding: 12px; }
+.vc-nc-typing-identity strong { font-size: 13px; }
+.vc-nc-typing-identity > span { font-size: 12px; }
+.vc-nc-status { font-size: 13px; line-height: 1.55; }

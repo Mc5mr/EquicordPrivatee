@@ -1,0 +1,40 @@
+[
+    {
+        "name": "Windows x64 PTB 1.0.1224 voice-1",
+        "sha256": "113add92e8704c5bd994940158aba3fa4766b49c4130bdf453316c00a8a2433a",
+        "patchedSha256": "cbad0394d4cf71def89e2295bbc85f7c8609f07da8a28b366083810fbdb1180c",
+        "source": "https://github.com/Loukious/DiscordVoicePatcher/blob/1990703d70fef6a0a43512324cbbeb5a59891234/patcher.ini",
+        "patches": [
+            {
+                "name": "CommitAudioCodecChannels",
+                "offset": 6684263,
+                "expected": "01",
+                "replacement": "02"
+            },
+            {
+                "name": "CommitAudioCodecStereoPath",
+                "offset": 6684275,
+                "expected": "75",
+                "replacement": "eb"
+            },
+            {
+                "name": "CreateAudioFrameChannels",
+                "offset": 1295840,
+                "expected": "4c0f43e9",
+                "replacement": "4989cd90"
+            },
+            {
+                "name": "OpusConfigChannels",
+                "offset": 6684041,
+                "expected": "01",
+                "replacement": "02"
+            },
+            {
+                "name": "CapturedAudioProcessorMonoGate",
+                "offset": 995178,
+                "expected": "84c0740d83be80020000090f8f",
+                "replacement": "909090909090909090909090e9"
+            }
+        ]
+    }
+]

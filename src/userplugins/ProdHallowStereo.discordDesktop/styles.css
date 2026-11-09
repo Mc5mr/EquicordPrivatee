@@ -1,0 +1,20 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-stereo-installer { width: 100%; max-width: 720px; gap: 14px; }
+.vc-stereo-warning { display: grid; gap: 8px; padding: 14px; border: 1px solid var(--text-warning, #f0b232); border-radius: 10px; }
+.vc-stereo-setting { display: grid; grid-template-columns: 180px minmax(0, 1fr); align-items: center; gap: 16px; }
+.vc-stereo-setting > a { justify-self: start; }
+.vc-stereo-path { padding: 10px 12px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--background-base-lowest, var(--background-tertiary)); overflow-wrap: anywhere; }
+.vc-stereo-actions, .vc-stereo-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.vc-stereo-footer { justify-content: space-between; }
+.vc-stereo-details { display: grid; gap: 8px; margin: 0; padding: 16px; border-radius: 12px; background: var(--background-surface-high, var(--background-secondary)); }
+.vc-stereo-details > div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; align-items: baseline; padding: 9px 12px; border-radius: 7px; background: var(--background-surface-higher, var(--background-tertiary)); }
+.vc-stereo-details dt { color: var(--text-muted); font-size: 12px; font-weight: 650; text-transform: uppercase; }
+.vc-stereo-details dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 680px) {
+    .vc-stereo-setting, .vc-stereo-details > div { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+}

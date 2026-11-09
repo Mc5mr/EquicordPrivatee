@@ -1,0 +1,26 @@
+/*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+.vc-mc5mr-read-dms.vc-btn-base {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-inline: 0 6px;
+    order: -1;
+    justify-content: center;
+    gap: 4px;
+    width: auto;
+    padding: 3px 7px;
+    min-height: 26px;
+    border-radius: 7px;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.vc-mc5mr-read-dms svg {
+    flex-shrink: 0;
+}
