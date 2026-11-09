@@ -56,7 +56,7 @@ async function returnToRoom() {
     const me = UserStore.getCurrentUser();
     const destination = locked ? ChannelStore.getChannel(locked) : undefined;
     const current = me ? VoiceStateStore.getVoiceStateForUser(me.id)?.channelId : null;
-    if (!running || !locked || !current || current === locked) return;
+    if (!running || !locked || current === locked) return;
     if (!destination || (destination.guild_id && (!PermissionStore.can(PermissionsBits.CONNECT, destination) || !PermissionStore.can(PermissionsBits.VIEW_CHANNEL, destination)))) return stopLock();
     attempts = attempts.filter(time => Date.now() - time < 60_000);
     if (attempts.length >= 3) { stopLock(); showToast("توقف التثبيت بعد تغييرات متكررة.", Toasts.Type.FAILURE); return; }
@@ -67,23 +67,22 @@ async function returnToRoom() {
 
 export default definePlugin({
     name: "VoiceLock",
-    description: "Pin your current voice room with a lower-left lock button. Stops when disconnected or access is lost.",
+    description: "Pin your current voice room and try to return after disconnection or a move.",
     authors: [{ name: "Mc5mr", id: 523157034141745153n }],
     dependencies: ["NightcordUI"],
     tags: ["Utility", "Voice"],
     userAreaButton: { priority: -20, icon: LockIcon, render: LockButton },
     stopRoomLock: stopLock,
-    settingsAboutComponent: () => <Panel><p>لا يعيد الدخول بعد الفصل من الصوت. تفعيل التثبيت يوقف الفولو مؤقتًا؛ بدء الفولو يلغي التثبيت. يمكن إبقاء البلوقنين مفعّلين.</p><Button onClick={toggle}>تفعيل / إلغاء تثبيت الروم</Button></Panel>,
+    settingsAboutComponent: () => <Panel><p>يحاول العودة للروم بعد الفصل أو النقل، ويتوقف إذا فقدت صلاحية الدخول أو تكررت المحاولات. تفعيل التثبيت يوقف الفولو مؤقتًا؛ بدء الفولو يلغي التثبيت.</p><Button onClick={toggle}>تفعيل / إلغاء تثبيت الروم</Button></Panel>,
     flux: {
         VOICE_STATE_UPDATES({ voiceStates }: { voiceStates: VoiceState[]; }) {
             if (!locked) return;
             const mine = voiceStates.find(state => state.userId === UserStore.getCurrentUser()?.id);
             if (!mine) return;
-            if (!mine.channelId) return stopLock();
             if (mine.channelId === locked) {
                 if (pending) clearTimeout(pending);
                 pending = undefined;
-            } else if (!pending) pending = setTimeout(() => void returnToRoom(), 0);
+            } else if (!pending) pending = setTimeout(() => void returnToRoom(), mine.channelId ? 0 : 1500);
         },
         LOGOUT: stopLock
     },
