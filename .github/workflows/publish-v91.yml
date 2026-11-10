@@ -1,0 +1,29 @@
+name: Publish Equicord v91
+on:
+  push:
+    branches: [main]
+    paths: [release-v91-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: python3 release-v91-rebuild.py
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-91 release-v91/desktop.asar release-v91/desktop.sha256 release-v91/Mc5mr-Equicord-Installer.exe release-v91/Mc5mr-Equicord-Installer.exe.sha256 --title 'Mc5mr Equicord v25-91' --notes 'Shows Mc5mr edition credit in the additional settings UI and adds the Sincord ProfileSpoofer user plugin. Automated build and type checks passed; live Discord compatibility is not yet verified.' --latest
+      - name: Activate updater
+        run: |
+          set -euo pipefail
+          cp release-v91-feed.json latest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest.json
+          git commit -m 'Activate v91 updater feed'
+          git push
