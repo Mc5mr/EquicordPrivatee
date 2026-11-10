@@ -1,0 +1,37 @@
+name: Publish Equicord v89
+on:
+  push:
+    branches: [main]
+    paths: [release-v89-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: |
+          set -euo pipefail
+          mkdir -p release-v89
+          cat release-v89-parts/part-* > release-v89/Mc5mr-Equicord-Installer.exe
+          echo '360dfee6184435484e5034c277bec1a49d5e0d2277875f5a710c82d9214569cf  release-v89/Mc5mr-Equicord-Installer.exe' | sha256sum -c -
+          python3 -c "from pathlib import Path; b=Path('release-v89/Mc5mr-Equicord-Installer.exe').read_bytes(); Path('release-v89/desktop.asar').write_bytes(b[11902242:11902242+51838423])"
+          echo '325b55ecb449e60483097d7ce210829e23575dfa61f6ae432c72150c90f36b54  release-v89/desktop.asar' | sha256sum -c -
+          printf '%s\n' 325b55ecb449e60483097d7ce210829e23575dfa61f6ae432c72150c90f36b54 > release-v89/desktop.sha256
+          printf '%s\n' 360dfee6184435484e5034c277bec1a49d5e0d2277875f5a710c82d9214569cf > release-v89/Mc5mr-Equicord-Installer.exe.sha256
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-89 release-v89/desktop.asar release-v89/desktop.sha256 release-v89/Mc5mr-Equicord-Installer.exe release-v89/Mc5mr-Equicord-Installer.exe.sha256 --title 'Mc5mr Equicord v25-89' --notes 'Updates Equicord to 1.15.17.2 and adds selected Nightcord plugins. Automated build, installer, updater and stereo tests passed; live Discord compatibility has not been verified.' --latest
+      - name: Activate updater
+        run: |
+          set -euo pipefail
+          cp release-v89-feed.json latest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest.json
+          git commit -m 'Activate v89 updater feed'
+          git push
