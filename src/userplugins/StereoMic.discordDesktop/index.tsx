@@ -8,7 +8,7 @@ import { Button } from "@components/Button";
 import definePlugin from "@utils/types";
 import { React, UserStore, VoiceStateStore } from "@webpack/common";
 
-import { applyAudio, defaults, removeAudio } from "../MicSettings.discordDesktop/audio";
+import { applyAudio, defaults, removeAudio } from "./audio";
 let running = false;
 let pending: ReturnType<typeof setTimeout> | undefined;
 let status = "انتظار دخول روم صوت أو تطبيق الطلب يدويًا.";
@@ -32,7 +32,7 @@ function About() {
 }
 export default definePlugin({
     name: "StereoMic", description: "Experimental, reversible two-channel microphone encoder request. Requires a stereo input and native support.",
-    authors: [{ name: "Mc5mr", id: 523157034141745153n }], dependencies: ["MicSettings"], tags: ["Voice"],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }], tags: ["Voice"],
     settingsAboutComponent: About,
     start() { running = true; try { schedule(); } catch (error) { publish(String(error)); } }, stop() { running = false; restore(); },
     flux: { VOICE_STATE_UPDATES: schedule, LOGOUT: restore, CONNECTION_OPEN() { restore(); schedule(); } }

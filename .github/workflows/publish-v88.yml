@@ -1,0 +1,28 @@
+name: Publish Equicord v88
+on:
+  push:
+    branches: [main]
+    paths: [release-v88/latest.json]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Verify and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 release-v88/verify.py
+          gh release create equicord-v25-88 release-v88/desktop.asar release-v88/desktop.sha256 release-v88/Mc5mr-Equicord-Installer.exe release-v88/Mc5mr-Equicord-Installer.exe.sha256 --title 'Mc5mr Equicord v25-88' --notes 'Adds BetterNotesBox, combines voice controls, and updates installer and application packages. Live Discord compatibility is not yet verified.' --latest
+      - name: Activate updater
+        run: |
+          set -euo pipefail
+          cp release-v88/latest.json latest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest.json
+          git commit -m 'Activate v88 updater feed'
+          git push

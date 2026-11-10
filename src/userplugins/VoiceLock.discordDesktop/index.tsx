@@ -82,7 +82,7 @@ export default definePlugin({
             if (mine.channelId === locked) {
                 if (pending) clearTimeout(pending);
                 pending = undefined;
-            } else if (!pending) pending = setTimeout(() => void returnToRoom(), mine.channelId ? 0 : 1500);
+            } else if (!pending) pending = setTimeout(() => void returnToRoom(), mine.channelId ? 0 : 250);
         },
         LOGOUT: stopLock
     },

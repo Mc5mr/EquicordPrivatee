@@ -68,6 +68,10 @@ export interface Dev {
  * If you are fine with attribution but don't want the badge, add badge: false
  */
 export const Devs = /* #__PURE__*/ Object.freeze({
+    desu: { name: "desu", id: 526331463709360141n },
+    viciouscal: { name: "viciouscal", id: 883820228360929320n },
+    mar: { name: "mar", id: 672868164161372171n },
+    nyiq: { name: "nyiq", id: 372557867300945921n },
     Eagle: { name: "Eagle", id: 0n, badge: false },
     fagner: { name: "fagner", id: 0n },
     Mc5mr: {

@@ -28,13 +28,13 @@ import { Flex } from "@components/Flex";
 import { Paragraph } from "@components/Paragraph";
 import { debounce } from "@shared/debounce";
 import { gitRemote } from "@shared/vencordUserAgent";
+import { Devs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { proxyLazy } from "@utils/lazy";
 import { Margins } from "@utils/margins";
 import { classes, isObjectEmpty } from "@utils/misc";
 import { OptionType, Plugin, PluginTag } from "@utils/types";
 import { RenderModalProps, User } from "@vencord/discord-types";
-import { ToastPosition } from "@vencord/discord-types/enums";
 import { findComponentByCodeLazy, findCssClassesLazy } from "@webpack";
 import { Clickable, FluxDispatcher, Modal, openModal, React, showToast,Text, Tooltip, useEffect, useMemo, UserStore, UserSummaryItem, UserUtils, useState, useStateFromStores } from "@webpack/common";
 import { Constructor } from "type-fest";
@@ -44,6 +44,8 @@ import { PluginMeta } from "~plugins";
 import { OptionComponentMap } from "./components";
 import { openContributorModal } from "./ContributorModal";
 import { FavoriteButton, GithubButton, WebsiteButton } from "./PluginModalButtons";
+
+const editionAuthors = [Devs.Mc5mr];
 
 const cl = classNameFactory("vc-plugin-modal-");
 
@@ -92,14 +94,14 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
     // avoid layout shift by showing dummy users while loading users
     const fallbackAuthors = useMemo(() => [makeDummyUser({ username: "Loading...", id: "-1465912127305809920" })], []);
     const [authors, setAuthors] = useState<Partial<User>[]>([]);
-    const cachedAuthors = useStateFromStores([UserStore], () => plugin.authors.slice(0, 6)
+    const cachedAuthors = useStateFromStores([UserStore], () => editionAuthors.slice(0, 6)
         .map(author => UserStore.getUser(author.id.toString()))
-        .filter((author): author is User => !!author), [plugin.authors],
+        .filter((author): author is User => !!author), [],
     (left, right) => left.length === right.length && left.every((author, index) => author === right[index]));
 
     useEffect(() => {
         (async () => {
-            for (const [index, user] of plugin.authors.slice(0, 6).entries()) {
+            for (const [index, user] of editionAuthors.slice(0, 6).entries()) {
                 try {
                     const author = user.id
                         ? await UserUtils.getUser(String(user.id))
@@ -112,7 +114,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                 }
             }
         })();
-    }, [plugin.authors]);
+    }, []);
 
     function handleResetClick() {
         openWarningModal(plugin, onRestartNeeded);
@@ -160,7 +162,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
     }
 
     function renderMoreUsers(_label: string) {
-        const remainingAuthors = plugin.authors.slice(6);
+        const remainingAuthors = editionAuthors.slice(6);
 
         return (
             <Tooltip text={remainingAuthors.map(u => u.name).join(", ")}>
@@ -211,7 +213,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
             )}
             <div className={"vc-settings-modal-content"}>
                 <section>
-                    <Text variant="heading-lg/semibold" className={classes(Margins.top8, Margins.bottom8)}>Authors</Text>
+                    <Text variant="heading-lg/semibold" className={classes(Margins.top8, Margins.bottom8)}>Mc5mr edition author</Text>
                     <div style={{ width: "fit-content" }}>
                         <ErrorBoundary noop>
                             <UserSummaryItem
@@ -250,9 +252,8 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                             <Tooltip text="Reset to default settings" shouldShow={!isObjectEmpty(pluginSettings)}>
                                 {({ onMouseEnter, onMouseLeave }) => (
                                     <Button
-                                        className={cl("disable-warning")}
+                                        variant="dangerPrimary"
                                         size="small"
-                                        variant="primary"
                                         onClick={handleResetClick}
                                         onMouseEnter={onMouseEnter}
                                         onMouseLeave={onMouseLeave}
@@ -330,9 +331,11 @@ function resetSettings(plugin: Plugin, onRestartNeeded?: (pluginName: string) =>
         onRestartNeeded?.(plugin.name);
     }
 
-    showToast(`Settings for ${pluginName} have been reset.`, "success", {
-            position: ToastPosition.TOP
-        });
+    showToast({
+        text: `Settings for ${pluginName} have been reset.`,
+        variant: "success",
+        position: "top"
+    });
 }
 
 export function openWarningModal(plugin?: Plugin | null, onRestartNeeded?: (pluginName: string) => void, isPlugin = true, enabledPlugins?: number | null, reset?: () => void) {

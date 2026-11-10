@@ -1,5 +1,7 @@
 # Additional plugins in equicord-v25-78
 
+ArabicUI, BetterMicrophone, BetterScreenshare, Questify, PhilsPluginLibrary, FakeDeafen, and the Text component were adapted from Vencord Arabic at commit `1f6086929da6c066124b0a4f2c2b7c66d7c06323`: https://github.com/viciouscal/Vencord/tree/1f6086929da6c066124b0a4f2c2b7c66d7c06323. Original notices and translation licenses are retained. Compatibility changes include modal typings, developer references, and the channel-tabs import. Mc5mr distributes this customized build.
+
 Bookmarks and Performance are adapted from reqon's GPL-3.0-or-later plugins:
 https://github.com/reqonpublishes/vencord-custom-plugins/tree/1f7b95444018907324580a72437220faffadad75
 

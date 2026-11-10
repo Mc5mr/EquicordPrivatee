@@ -114,7 +114,8 @@ export function visualUser(user: User | null | undefined) {
     if (cached?.user === user && cached.appearance === value) return cached.result;
     const result = Object.create(user) as User;
     Object.defineProperties(result, {
-        username: { value: value.username }, globalName: { value: alias ?? value.globalName }, global_name: { value: alias ?? value.globalName },
+        username: { value: value.username }, globalName: { value: value.globalName ?? value.username }, global_name: { value: value.globalName ?? value.username },
+        primaryGuild: { value: null },
         avatarDecorationData: { value: value.avatarDecorationData ?? null },
         collectibles: { value: value.collectibles ?? null }, displayNameStyles: { value: value.displayNameStyles ?? null },
         avatar: { value: value.avatar }, banner: { value: value.banner ?? null }, getAvatarURL: { value: () => value.avatarUrl }
@@ -175,6 +176,8 @@ function installPresentationHooks() {
         const wrapped: typeof original = function (...args: unknown[]) {
             const user = args.find((arg): arg is User => !!arg && typeof arg === "object" && "id" in arg && "username" in arg);
             const alias = user && localName(user.id);
+            const copied = user && snapshot();
+            if (copied && user.id === copied.owner && (key === "getName" || key === "getGlobalName")) return copied.globalName ?? copied.username;
             if (alias && (key === "getName" || key === "getGlobalName")) return alias;
             return Reflect.apply(original, UsernameUtils, args.map(arg => arg === user ? visualUser(user) : arg)) as string;
         };
