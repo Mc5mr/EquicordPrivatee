@@ -1,0 +1,29 @@
+name: Publish Equicord v92
+on:
+  push:
+    branches: [main]
+    paths: [release-v92-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: python3 release-v92-rebuild.py
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-92 release-v92/desktop.asar release-v92/desktop.sha256 release-v92/Mc5mr-Equicord-Installer.exe release-v92/Mc5mr-Equicord-Installer.exe.sha256 --title 'Mc5mr Equicord v25-92' --notes 'Adds 100 CloudCord appearance tweaks and 12 selected Endcord plugins to UserPlugins. Original source attribution is retained. Build, type checks and updater tests passed; live Discord compatibility has not been verified.' --latest
+      - name: Activate updater
+        run: |
+          set -euo pipefail
+          cp release-v92-feed.json latest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest.json
+          git commit -m 'Activate v92 updater feed'
+          git push
