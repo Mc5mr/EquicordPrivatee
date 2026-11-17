@@ -1,0 +1,29 @@
+name: Publish Equicord v100
+on:
+  push:
+    branches: [main]
+    paths: [release-v100-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: python3 release-v100-rebuild.py
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-100 release-v100/desktop.asar release-v100/desktop.sha256 release-v100/Mc5mr-Equicord-Installer.exe release-v100/Mc5mr-Equicord-Installer.exe.sha256 release-v100/Equicord-v100-source.tar.gz --title 'Mc5mr Equicord v25-100' --notes 'Experimental AFK Panel now runs locally without a separate service or service password; redesigned UI inspired by Nightcord. Build and simulated tests passed; no live Discord account or visual runtime test was performed. Self-bots may result in account restrictions. Camera and screen share are experimental indicators, not actual video.' --latest
+      - name: Activate updater
+        run: |
+          set -euo pipefail
+          cp release-v100-feed.json latest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add latest.json
+          git commit -m 'Activate v100 updater feed'
+          git push
