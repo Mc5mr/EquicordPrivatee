@@ -1,27 +1,17 @@
 {
-  "tag_name": "equicord-v25-101",
+  "tag_name": "equicord-v25-102",
   "draft": false,
   "prerelease": false,
   "assets": [
     {
-      "name": "desktop.asar",
-      "size": 52625534,
-      "sha256": "d5260c4c6f79d7af738eaa276e7a77aaa44f3312d7b3fb705cdd1038708d2afc"
-    },
-    {
-      "name": "desktop.sha256",
-      "size": 65,
-      "sha256": "8321d4adac6c2a761aa6817395bbcd5338a90f414193a5b97fa2beca471e3f25"
-    },
-    {
       "name": "Mc5mr-Equicord-Installer.exe",
-      "size": 64990720,
-      "sha256": "a884f9f57b4cfc682e21409eeb6b76b0e3f75fea6b2b06d5b08172c1a2a19006"
+      "size": 64984064,
+      "sha256": "cf90bccc730b8240e4ba5d5a74db9d389e5e67ab362a06e6d5f755e40207ed24"
     },
     {
       "name": "Mc5mr-Equicord-Installer.exe.sha256",
       "size": 65,
-      "sha256": "2499b48907afac714e707ac441a0c57d94b34a8fd0677bc6a032f9ae89c505b6"
+      "sha256": "e5ef2b5d90839609b47c399dfb067dd17ec5f14dc341f0f6e29eaed772f71e45"
     }
   ]
 }
