@@ -1,0 +1,20 @@
+name: Publish Equicord v102
+on:
+  push:
+    branches: [main]
+    paths: [release-v102-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: python3 release-v102-rebuild.py
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-102 release-v102/desktop.asar release-v102/desktop.sha256 release-v102/Mc5mr-Equicord-Installer.exe release-v102/Mc5mr-Equicord-Installer.exe.sha256 release-v102/Equicord-v102-source.tar.gz --title 'Mc5mr Equicord v25-102' --notes 'Manual installer release. Voice join notifications, voice rule retry, local profile and menu fixes. Build and automated checks passed; live Discord testing has not been performed. Run the new installer and choose Reinstall / Repair.' --latest
