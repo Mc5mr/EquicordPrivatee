@@ -1,0 +1,20 @@
+name: Publish Equicord v104
+on:
+  push:
+    branches: [main]
+    paths: [release-v104-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: python3 release-v104-rebuild.py
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-104 release-v104/desktop.asar release-v104/desktop.sha256 release-v104/Mc5mr-Equicord-Installer.exe release-v104/Mc5mr-Equicord-Installer.exe.sha256 release-v104/Equicord-v104-source.tar.gz --title 'Mc5mr Equicord v25-104' --notes 'Updates Clonecord to v1.4.1 and routes plugin updates through the installer. Equicord remains at official v1.15.17.3. Build and automated tests passed; live Discord testing has not been performed.' --latest
