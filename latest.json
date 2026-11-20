@@ -1,17 +1,17 @@
 {
-  "tag_name": "equicord-v25-106",
+  "tag_name": "equicord-v25-107",
   "draft": false,
   "prerelease": false,
   "assets": [
     {
       "name": "Mc5mr-Equicord-Installer.exe",
-      "size": 64990720,
-      "sha256": "c70dde99c161f9ec40534e0801f6dd65d1d50500acbce2ad93d7691e17f2932b"
+      "size": 64998400,
+      "sha256": "67aaeea06a7af9e2806bd843ef1cc04901bb6ffd2433ad002456c5204cf95e5d"
     },
     {
       "name": "Mc5mr-Equicord-Installer.exe.sha256",
       "size": 65,
-      "sha256": "5e2f999ae000e29a14716ddaa1778756a4349ec1175b597f572b9d7161a1aec6"
+      "sha256": "f7c51e33670ac13691542e14c4cf6dacac1f614df08ef96a359622ce81e69829"
     }
   ]
 }
