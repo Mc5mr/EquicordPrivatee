@@ -1,0 +1,20 @@
+name: Publish Equicord v107
+on:
+  push:
+    branches: [main]
+    paths: [release-v107-parts/part-000]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Reassemble and verify files
+        run: python3 release-v107-rebuild.py
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create equicord-v25-107 release-v107/desktop.asar release-v107/desktop.sha256 release-v107/Mc5mr-Equicord-Installer.exe release-v107/Mc5mr-Equicord-Installer.exe.sha256 release-v107/Equicord-v107-source.tar.gz --title 'Mc5mr Equicord v25-107' --notes 'Optional target role replacement with confirmation and role hierarchy safeguards. Requests are paced, and Discord rate limits are respected. Automated checks passed; live Discord cloning has not been performed.' --latest
