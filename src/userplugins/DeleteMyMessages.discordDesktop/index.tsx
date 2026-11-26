@@ -196,7 +196,7 @@ async function run(channelId: string) {
 export default definePlugin({
     name: "DeleteMyMessages",
     description: "Delete your own messages in the current DM or group chat with a confirmed count and local progress.",
-    authors: [Devs.Mc5mr],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.Mc5mr],
     tags: ["Chat", "Utility"],
     enabledByDefault: true,
     commands: [

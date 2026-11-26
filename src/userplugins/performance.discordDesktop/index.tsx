@@ -80,7 +80,7 @@ migratePluginSettings("Performance", "Smoother");
 export default definePlugin({
     name: "Performance",
     description: "Continues scrolling through pages of blocked or ignored messages.",
-    authors: [{ name: "reqon", id: 497562304498368513n }],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, { name: "reqon", id: 497562304498368513n }],
     enabledByDefault: false,
 
     settings,

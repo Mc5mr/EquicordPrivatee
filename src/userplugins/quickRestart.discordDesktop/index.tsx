@@ -11,7 +11,7 @@ import definePlugin from "@utils/types";
 export default definePlugin({
     name: "QuickRestart",
     description: "Reload the current Discord window or restart the client from plugin settings.",
-    authors: [{ name: "reqon", id: 497562304498368513n }],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, { name: "reqon", id: 497562304498368513n }],
     settingsAboutComponent: () => <div>
         <p>Adapted by Mc5mr from reqon's QuickRestart. Restarting may interrupt your current call.</p>
         <Button onClick={() => location.reload()}>Reload window</Button>

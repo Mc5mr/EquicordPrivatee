@@ -111,7 +111,7 @@ function About() {
 export default definePlugin({
     name: "AutoUnmute",
     description: "Automatically remove server mute and deafen from your account where you have the required permissions.",
-    authors: [Devs.Mc5mr],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.Mc5mr],
     tags: ["Voice", "Utility"],
     enabledByDefault: false,
     settings,

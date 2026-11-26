@@ -37,6 +37,7 @@ const slideMembers = new Map<string, Set<string>>();
 const listeners = new Set<() => void>();
 const recent = new Map<string, number[]>();
 const inFlight = new Set<string>();
+const acknowledged = new WeakMap<Rule, string>();
 const cooldowns = new Map<string, ReturnType<typeof setTimeout>>();
 const work = new Map<string, Promise<void>>();
 const walking = new Map<string, symbol>();
@@ -64,18 +65,20 @@ async function loadPersistentRules() {
     storageOwner = owner;
     const [saved, savedCameraGuards] = await Promise.all([DataStore.get(storageKey(owner)), DataStore.get(cameraGuardStorageKey(owner))]);
     if (storageOwner !== owner || UserStore.getCurrentUser()?.id !== owner) return;
+    let restoredRules = false;
     if (Array.isArray(saved)) {
         for (const item of saved) {
             if (!item || typeof item !== "object" || !("kind" in item) || !("userId" in item) || !("guildId" in item)) continue;
             const { kind, userId, guildId } = item;
             if ((kind !== "denyMe" && kind !== "cameraDisconnect") || typeof userId !== "string" || typeof guildId !== "string") continue;
             rules.set(ruleKey(kind, userId), { kind, userId, guildId, channelId: "" });
+            restoredRules = true;
         }
     }
     cameraGuardGuilds.clear();
     if (Array.isArray(savedCameraGuards)) for (const guildId of savedCameraGuards) if (typeof guildId === "string") cameraGuardGuilds.add(guildId);
     publish();
-    schedule();
+    if (restoredRules) schedule();
 }
 
 function pause(delay: number) {
@@ -181,7 +184,8 @@ function queueChange(rule: Rule) {
     const task = (work.get(rule.userId) ?? Promise.resolve()).then(async () => {
         if (!running || epoch !== generation || rules.get(key) !== rule || cooldowns.has(rule.userId)) return;
         const change = desiredChange(rule);
-        if (!Object.keys(change).length) return;
+        const requestState = JSON.stringify([voiceState(rule.userId, rule.guildId || undefined)?.channelId, change]);
+        if (!Object.keys(change).length || acknowledged.get(rule) === requestState) return;
         const now = Date.now();
         const attempts = (recent.get(rule.userId) ?? []).filter(time => now - time < 60_000);
         if (attempts.length >= 6) {
@@ -195,8 +199,15 @@ function queueChange(rule: Rule) {
         recent.set(rule.userId, attempts);
         attempted = change;
         await changeMember(rule.userId, rule.guildId, change);
+        if (epoch === generation && rules.get(key) === rule) acknowledged.set(rule, requestState);
     }).catch(error => {
         if (epoch !== generation || rules.get(key) !== rule) return;
+        const status = error && typeof error === "object" && "status" in error ? error.status : undefined;
+        if (!voiceChannel(rule.userId, rule.guildId || undefined)) return;
+        if (typeof status === "number" && status >= 500 && status <= 599) {
+            coolDown(rule.userId, 2000);
+            return;
+        }
         if (error && typeof error === "object" && "status" in error && error.status === 429) {
             const seconds = "body" in error && error.body && typeof error.body === "object" && "retry_after" in error.body ? error.body.retry_after : 1;
             coolDown(rule.userId, typeof seconds === "number" && Number.isFinite(seconds) && seconds >= 0 ? Math.max(1000, Math.min(3_600_000, Math.ceil(seconds * 1000))) : 1000);
@@ -287,6 +298,7 @@ function reconcile() {
     if (!me) return;
     for (const rule of rules.values()) {
         if (Object.keys(desiredChange(rule)).length) queueChange(rule);
+        else acknowledged.delete(rule);
     }
     for (const [sourceId, destination] of slides) {
         const source = ChannelStore.getChannel(sourceId);

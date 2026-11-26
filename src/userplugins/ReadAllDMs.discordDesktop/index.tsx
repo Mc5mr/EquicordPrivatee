@@ -47,7 +47,7 @@ const SafeReadAllDMsButton = ErrorBoundary.wrap(ReadAllDMsButton, { noop: true }
 export default definePlugin({
     name: "ReadAllDMs",
     description: "Mark all unread direct messages and group chats as read with one button.",
-    authors: [Devs.Mc5mr],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.Mc5mr],
     tags: ["Notifications", "Shortcuts"],
     enabledByDefault: true,
     managedStyle: style,

@@ -34,7 +34,7 @@ export function prepareDecoders<T extends { videoDecoders?: Decoder[]; }>(option
 export default definePlugin({
     name: "StreamPlaybackFix",
     description: "Avoid failing H265 reception and use software H264 decoding with fallback for screen shares.",
-    authors: [Devs.Mc5mr],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.Mc5mr],
     tags: ["Utility", "Voice"],
     enabledByDefault: true,
     required: true,

@@ -46,7 +46,7 @@ async function tick() {
 export default definePlugin({
     name: "Mc5mrUpdates",
     description: "Account-free automatic updates for the Mc5mr edition, applied on the next full restart.",
-    authors: [Devs.Mc5mr],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.Mc5mr],
     enabledByDefault: true,
     required: true,
     hidden: true,

@@ -104,7 +104,7 @@ function StereoInstaller() {
 export default definePlugin({
     name: "ProdHallowStereo",
     description: "Install and restore Discord Audio Collective stereo from Discord settings on Windows.",
-    authors: [Devs.Mc5mr],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.Mc5mr],
     enabledByDefault: true,
     required: true,
     hidden: true,

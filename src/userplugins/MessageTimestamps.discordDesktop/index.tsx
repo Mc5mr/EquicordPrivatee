@@ -51,7 +51,7 @@ const SafeTimestamp = ErrorBoundary.wrap(Timestamp, { noop: true });
 export default definePlugin({
     name: "MessageTimestamps",
     description: "Shows live relative message ages with the complete timestamp on hover.",
-    authors: [Devs.fagner],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, Devs.fagner],
     enabledByDefault: true,
     settings,
     managedStyle: style,

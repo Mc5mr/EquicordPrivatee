@@ -141,7 +141,7 @@ const profileBadge: ProfileBadge = {
 export default definePlugin({
     name: "Staff Crowns",
     description: "Adds a Crown/Tag to Server Owners (or Admins/Management)",
-    authors: [{ name: "NuzFlameV2", id: 1248366351194652712n }, { name: "ItsDenji777", id: 876433011866992680n }],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, { name: "NuzFlameV2", id: 1248366351194652712n }, { name: "ItsDenji777", id: 876433011866992680n }],
     settings,
     tags: ["Appearance", "Servers"],
 

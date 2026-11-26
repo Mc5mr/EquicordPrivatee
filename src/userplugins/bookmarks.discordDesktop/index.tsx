@@ -144,7 +144,7 @@ function holds(node: any, test: (id: string) => boolean): boolean {
 export default definePlugin({
     name: "Bookmarks",
     description: "Bookmark profiles and find them again from Friends.",
-    authors: [{ name: "reqon", id: 497562304498368513n }],
+    authors: [{ name: "Mc5mr", id: 523157034141745153n }, { name: "reqon", id: 497562304498368513n }],
 
     settings,
 
