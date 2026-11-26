@@ -199,7 +199,9 @@ function queueChange(rule: Rule) {
         recent.set(rule.userId, attempts);
         attempted = change;
         await changeMember(rule.userId, rule.guildId, change);
-        if (epoch === generation && rules.get(key) === rule) acknowledged.set(rule, requestState);
+        if (epoch === generation && rules.get(key) === rule && Object.keys(desiredChange(rule)).length) {
+            acknowledged.set(rule, requestState);
+        }
     }).catch(error => {
         if (epoch !== generation || rules.get(key) !== rule) return;
         const status = error && typeof error === "object" && "status" in error ? error.status : undefined;
